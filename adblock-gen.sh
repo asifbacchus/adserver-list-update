@@ -80,11 +80,11 @@ echo "Removing duplicates, blank lines and sorting for readability..."
 # 2: remove adjacent duplicate entries (that's why we sorted in 1 above)
 # 3: remove any blank lines
 # 4: save output file
-sort $locationWorkingfiles/combined_entries.txt | uniq | sed '/^$/d' > sorted_entries.txt
+sort $locationWorkingfiles/combined_entries.txt | uniq | sed '/^$/d' > $locationWorkingfiles/sorted_entries.txt
 
 echo "Adding proper address prefix..."
 # Add address as defined in $dummyaddr before each host entry
 # double-quotes used so the variable's value is expanded into the statement
-sed "s/^/$dummyaddr /" sorted_entries.txt > "$listpath/adblock.dnsmasq"
+sed "s/^/$dummyaddr /" $locationWorkingfiles/sorted_entries.txt > $listpath/adblock.dnsmasq
 
 echo "...adblock list updated"
