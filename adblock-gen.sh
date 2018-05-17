@@ -100,5 +100,10 @@ echo "Adding proper address prefix..."
 sed "s/^/$dummyaddr /" $locationWorkingfiles/sorted_entries.txt > $listpath/adblock.dnsmasq
 
 echo
-echo "...adblock list updated"
+echo "...adblock list updated..."
+echo "...cleaning up"
 
+## Cleanup created directories and files
+rm -rf $locationSourcefiles
+rm -rf $locationWorkingfiles
+echo "...done"
