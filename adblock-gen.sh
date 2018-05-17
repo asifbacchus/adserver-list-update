@@ -34,53 +34,53 @@ echo "Cleaning up source files to remove comments, ip addresses, etc."
 # 2: get actual host entries which are being redirected, the line starts with "0.0.0.0"
 # 3: don't include any refernces to hosts that end in ".0" since those are interface addresses
 # 4: remove address prefixes so that we are left with just the domain name
-# 5: save output file in working directory with filename
-grep -v "#" sources/stevenblack.txt | grep "0.0.0.0" | grep -v ".0$" | awk '{print $2}' > working/stevenblack.txt
+# 5: save output file in $locationWorkingfiles directory with filename
+grep -v "#" $locationSourcefiles/stevenblack.txt | grep "0.0.0.0" | grep -v ".0$" | awk '{print $2}' > $locationWorkingfiles/stevenblack.txt
 
 # malwaredomains.txt
 # this file is just a list of domains with nothing else, so it's perfect as-is
-# copy the file to the working directory with the same name
-cp source/malwaredomains.txt working/malwaredomains.txt
+# copy the file to the $locationWorkingfiles directory with the same name
+cp $locationSourcefiles/malwaredomains.txt $locationWorkingfiles/malwaredomains.txt
 
 # sysctl.txt
 # 1: exclude any comments as indicated by a hash symbol
 # 2: remove address prefixes so that we are left with just the domain name
-# 3: save output file in working directory with same filename
-grep -v "#" sources/sysctl.txt | awk '{print $2}' > working/sysctl.txt
+# 3: save output file in $locationWorkingfiles directory with same filename
+grep -v "#" $locationSourcefiles/sysctl.txt | awk '{print $2}' > $locationWorkingfiles/sysctl.txt
 
 # abuse-ch.txt
 # 1: exclude any comments as indicated by a hash symbol
-# 2: save output file in working directory with same filename
-grep -v "#" sources/abuse-ch.txt > working/abuse-ch.txt
+# 2: save output file in $locationWorkingfiles directory with same filename
+grep -v "#" $locationSourcefiles/abuse-ch.txt > $locationWorkingfiles/abuse-ch.txt
 
 # disconnect-simple_tracking.txt
 # 1: exclude any comments as indicated by a hash symbol
-# 2: save output file in working directory with same filename
-grep -v "#" sources/disconnect-simple_tracking.txt > working/disconnect-simple_tracking.txt
+# 2: save output file in $locationWorkingfiles directory with same filename
+grep -v "#" $locationSourcefiles/disconnect-simple_tracking.txt > $locationWorkingfiles/disconnect-simple_tracking.txt
 
 # disconnect-simple_ad.txt
 # 1: exclude any comments as indicated by a hash symbol
-# 2: save output file in working directory with same filename
-grep -v "#" sources/disconnect-simple_ad.txt > working/disconnect-simple_ad.txt
+# 2: save output file in $locationWorkingfiles directory with same filename
+grep -v "#" $locationSourcefiles/disconnect-simple_ad.txt > $locationWorkingfiles/disconnect-simple_ad.txt
 
 # hostsfile-adservers.txt
 # 1: exclude any comments as indicated by a hash symbol
 # 2: exclude any lines ending in 'localhost' since those are interface addresses
 # 3: remove address prefixes so that we are left with just the domain name
-# 4: save output file in working directory with filename
-grep -v "#" sources/hostsfile-adservers.txt | grep -v "localhost$" | awk '{print $2}' > working/hostsfile-adservers.txt
+# 4: save output file in $locationWorkingfiles directory with filename
+grep -v "#" $locationSourcefiles/hostsfile-adservers.txt | grep -v "localhost$" | awk '{print $2}' > $locationWorkingfiles/hostsfile-adservers.txt
 
 
 ## Combine all files, sort, remove duplicates and create a 'master-list'
 echo "Combining files..."
-cat working/* > working/combined_entries.txt
+cat $locationWorkingfiles/* > $locationWorkingfiles/combined_entries.txt
 
 echo "Removing duplicates, blank lines and sorting for readability..."
 # 1: sort file in ascending order (default) so duplicates are listed consecutively
 # 2: remove adjacent duplicate entries (that's why we sorted in 1 above)
 # 3: remove any blank lines
 # 4: save output file
-sort working/combined_entries.txt | uniq | sed '/^$/d' > sorted_entries.txt
+sort $locationWorkingfiles/combined_entries.txt | uniq | sed '/^$/d' > sorted_entries.txt
 
 echo "Adding proper address prefix..."
 # Add address as defined in $dummyaddr before each host entry
