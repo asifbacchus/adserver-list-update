@@ -16,6 +16,16 @@ mkdir $locationWorkingfiles
 mkdir $listpath
 
 
+## Print to console a script intro what this script is about to do
+echo ************************************************************
+echo * Updating adserver addresses used to generate adblocking  *
+echo * external hosts file used by DNSMASQ.                     *
+echo * File paths can be updated in the 'Variables...' section  *
+echo * of this script file.                                     *
+echo ************************************************************
+echo
+
+
 ## Download source files using wget, rename them and save to 'sources' folder
 echo "Downloading ad-block list source files"
 wget -t 3 -T 60 -O $locationSourcefiles/stevenblack.txt https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
@@ -27,6 +37,7 @@ wget -t 3 -T 60 -O $locationSourcefiles/disconnect-simple_ad.txt https://s3.amaz
 wget -t 3 -T 60 -O $locationSourcefiles/hostsfile-adservers.txt https://hosts-file.net/ad_servers.txt
 
 ## Cleanup the files (remove comments, errant ip addresses, etc.)
+echo
 echo "Cleaning up source files to remove comments, ip addresses, etc."
 
 # stevenblack.txt
@@ -72,6 +83,7 @@ grep -v "#" $locationSourcefiles/hostsfile-adservers.txt | grep -v "localhost$" 
 
 
 ## Combine all files, sort, remove duplicates and create a 'master-list'
+echo
 echo "Combining files..."
 cat $locationWorkingfiles/* > $locationWorkingfiles/combined_entries.txt
 
@@ -87,4 +99,6 @@ echo "Adding proper address prefix..."
 # double-quotes used so the variable's value is expanded into the statement
 sed "s/^/$dummyaddr /" $locationWorkingfiles/sorted_entries.txt > $listpath/adblock.dnsmasq
 
+echo
 echo "...adblock list updated"
+
