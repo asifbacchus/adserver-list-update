@@ -5,18 +5,26 @@
 
 ## Variables used in this script
 dummyaddr = "0.0.0.0"   # suggest using a non-routable address here to avoid waiting on localhost timouts
-listpath = "."
+locationSourcefiles = "sources"
+locationWorkingfiles = "working"
+listpath = "lists"
+
+
+## Create directories needed for this script
+mkdir $locationSourcefiles
+mkdir $locationWorkingfiles
+mkdir $listpath
 
 
 ## Download source files using wget, rename them and save to 'sources' folder
 echo "Downloading ad-block list source files"
-wget -t 3 -T 60 -O sources/stevenblack.txt https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-wget -t 3 -T 60 -O sources/malwaredomains.txt https://mirror1.malwaredomains.com/files/justdomains
-wget -t 3 -T 60 -O sources/sysctl.txt http://sysctl.org/cameleon/hosts
-wget -t 3 -T 60 -O sources/abuse-ch.txt https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
-wget -t 3 -T 60 -O sources/disconnect-simple_tracking.txt https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-wget -t 3 -T 60 -O sources/disconnect-simple_ad.txt https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-wget -t 3 -T 60 -O sources/hostsfile-adservers.txt https://hosts-file.net/ad_servers.txt
+wget -t 3 -T 60 -O $locationSourcefiles/stevenblack.txt https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+wget -t 3 -T 60 -O $locationSourcefiles/malwaredomains.txt https://mirror1.malwaredomains.com/files/justdomains
+wget -t 3 -T 60 -O $locationSourcefiles/sysctl.txt http://sysctl.org/cameleon/hosts
+wget -t 3 -T 60 -O $locationSourcefiles/abuse-ch.txt https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
+wget -t 3 -T 60 -O $locationSourcefiles/disconnect-simple_tracking.txt https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+wget -t 3 -T 60 -O $locationSourcefiles/disconnect-simple_ad.txt https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+wget -t 3 -T 60 -O $locationSourcefiles/hostsfile-adservers.txt https://hosts-file.net/ad_servers.txt
 
 ## Cleanup the files (remove comments, errant ip addresses, etc.)
 echo "Cleaning up source files to remove comments, ip addresses, etc."
