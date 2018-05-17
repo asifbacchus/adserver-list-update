@@ -4,10 +4,10 @@
 ### a DNSMASQ host file which will redirect those addresses to 0.0.0.0
 
 ## Variables used in this script
-dummyaddr = "0.0.0.0"   # suggest using a non-routable address here to avoid waiting on localhost timouts
-locationSourcefiles = "sources"
-locationWorkingfiles = "working"
-listpath = "lists"
+dummyaddr="0.0.0.0"   # suggest using a non-routable address here to avoid waiting on localhost timouts
+locationSourcefiles="sources"
+locationWorkingfiles="working"
+listpath="lists"
 
 
 ## Create directories needed for this script
