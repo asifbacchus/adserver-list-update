@@ -17,12 +17,12 @@ mkdir $listpath
 
 
 ## Print to console a script intro what this script is about to do
-echo ************************************************************
-echo * Updating adserver addresses used to generate adblocking  *
-echo * external hosts file used by DNSMASQ.                     *
-echo * File paths can be updated in the 'Variables...' section  *
-echo * of this script file.                                     *
-echo ************************************************************
+echo "************************************************************"
+echo "* Updating adserver addresses used to generate adblocking  *"
+echo "* external hosts file used by DNSMASQ.                     *"
+echo "* File paths can be updated in the 'Variables...' section  *"
+echo "* of this script file.                                     *"
+echo "************************************************************"
 echo
 
 
