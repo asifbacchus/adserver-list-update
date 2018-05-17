@@ -10,13 +10,13 @@ listpath = "."
 
 ## Download source files using wget, rename them and save to 'sources' folder
 echo "Downloading ad-block list source files"
-wget -t 3 -T 60 -P sources -O stevenblack.txt https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-wget -t 3 -T 60 -P sources -O malwaredomains.txt https://mirror1.malwaredomains.com/files/justdomains
-wget -t 3 -T 60 -P sources -O sysctl.txt http://sysctl.org/cameleon/hosts
-wget -t 3 -T 60 -P sources -O abuse-ch.txt https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
-wget -t 3 -T 60 -P sources -O disconnect-simple_tracking.txt https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-wget -t 3 -T 60 -P sources -O disconnect-simple_ad.txt https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-wget -t 3 -T 60 -P sources -O hostsfile-adservers.txt https://hosts-file.net/ad_servers.txt
+wget -t 3 -T 60 -O sources/stevenblack.txt https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+wget -t 3 -T 60 -O sources/malwaredomains.txt https://mirror1.malwaredomains.com/files/justdomains
+wget -t 3 -T 60 -O sources/sysctl.txt http://sysctl.org/cameleon/hosts
+wget -t 3 -T 60 -O sources/abuse-ch.txt https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
+wget -t 3 -T 60 -O sources/disconnect-simple_tracking.txt https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+wget -t 3 -T 60 -O sources/disconnect-simple_ad.txt https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+wget -t 3 -T 60 -O sources/hostsfile-adservers.txt https://hosts-file.net/ad_servers.txt
 
 ## Cleanup the files (remove comments, errant ip addresses, etc.)
 echo "Cleaning up source files to remove comments, ip addresses, etc."
