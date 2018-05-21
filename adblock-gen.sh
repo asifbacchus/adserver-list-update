@@ -4,6 +4,7 @@
 ### in a DNSMASQ host file which will redirect those addresses to an IPv4 & IPv6
 ### address as specified in $ipv4addr and $ipv6addr.
 
+
 ## Variables used in this script
 # ipv4addr and ipv6addr: suggest using the unspecified (ipv4addr="0.0.0.0",
 # ipv6addr="::") address for just a 'blackhole'. If you want to forward to a
@@ -18,8 +19,8 @@ ipv6addr="fd9e:a15:c7a9:f233::1"
 dir=$(pwd -P)
 locationSourcefiles="$dir/sources"
 locationWorkingfiles="$dir/working"
-# Edit this path to suit your installation.  This can be any directory that
-# makes sense for your setup.  On many systems, "/etc/dnsmasq.d" makes sense.
+# Edit 'listpath' to suit your installation.  This can be any directory that
+# makes sense for your setup.  On most systems, "/etc/dnsmasq.d" makes sense.
 # Use a full path here to avoid problems running this script as a cron job.
 listpath="$dir/lists"
 
@@ -56,8 +57,8 @@ echo "Cleaning up source files to remove comments, ip addresses, etc."
 
 # stevenblack.txt
 # 1: exclude any comments as indicated by a hash symbol
-# 2: get actual host entries which are being redirected, the line starts with "0.0.0.0"
-# 3: don't include any refernces to hosts that end in ".0" since those are interface addresses
+# 2: get actual host entries, they start with "0.0.0.0"
+# 3: don't include any hosts that end in ".0", they are interface addresses
 # 4: remove address prefixes so that we are left with just the domain name
 # 5: save output file in $locationWorkingfiles directory with filename
 grep -v "#" $locationSourcefiles/stevenblack.txt | grep "0.0.0.0" | grep -v ".0$" | awk '{print $2}' > $locationWorkingfiles/stevenblack.txt
@@ -112,12 +113,12 @@ sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' 
 cp $locationWorkingfiles/sorted_entries.txt $locationWorkingfiles/sorted_entries6.txt
 
 echo "Adding ipv4:$ipv4addr address prefix..."
-# Add address as defined in $ipv4addr before each host entry in sorted_entries.txt
+# Add address defined in $ipv4addr before each host entry in sorted_entries.txt
 # double-quotes used so the variable's value is expanded
 sed "s/^/$ipv4addr /" $locationWorkingfiles/sorted_entries.txt > $locationWorkingfiles/ipv4list.txt
 
 echo "Adding ipv6:$ipv6addr address prefix..."
-# Add address as defined in $ipv6addr before each host entry in sorted_entries6.txt
+# Add address defined in $ipv6addr before each host entry in sorted_entries6.txt
 # double-quotes used to the variable's value is expanded
 sed "s/^/$ipv6addr /" $locationWorkingfiles/sorted_entries6.txt > $locationWorkingfiles/ipv6list.txt
 
@@ -126,9 +127,13 @@ cat $locationWorkingfiles/ipv4list.txt $locationWorkingfiles/ipv6list.txt | sort
 
 echo
 echo "...adblock list updated..."
-echo "...cleaning up"
+
 
 ## Cleanup created directories and files
+echo "...cleaning up"
 rm -rf $locationSourcefiles
 rm -rf $locationWorkingfiles
+
+## Exit script gracefully
 echo "...done"
+exit
