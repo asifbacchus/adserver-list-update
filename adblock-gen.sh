@@ -10,9 +10,11 @@
 # ipv6addr="::") address for just a 'blackhole'. If you want to forward to a
 # specific server (such as your webserver, etc.) then use that address in these
 # variables. If either ipv4addr or ipv6addr is blank, they will NOT be included
-# in the final address list.
-ipv4addr="10.0.0.1"
-ipv6addr="fd9e:a15:c7a9:f233::1"
+# in the final address list.  Variables can be made blank by either setting them
+# equal to "" or having nothing after the equal sign.  Please note: blank and
+# the undefined parameter (0.0.0.0 or ::) are NOT the same!
+ipv4addr="0.0.0.0"
+ipv6addr="::"
 # get directory in which this script this is located and use that as the base
 # directory for 'sources' and 'working' sub-directories.  This way, path
 # problems are avoided when running as a cron job.
@@ -108,20 +110,48 @@ echo "Removing duplicates, blank lines and sorting for readability..."
 #      consecutively, -u option removes duplicates
 # 3: remove any blank lines
 # 4: save output file
-sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > $locationWorkingfiles/sorted_entries.txt
-# copy file to there's one copy for ipv4 and one for ipv6
-cp $locationWorkingfiles/sorted_entries.txt $locationWorkingfiles/sorted_entries6.txt
 
-echo "Adding ipv4:$ipv4addr address prefix..."
-# Add address defined in $ipv4addr before each host entry in sorted_entries.txt
-# double-quotes used so the variable's value is expanded
-sed "s/^/$ipv4addr /" $locationWorkingfiles/sorted_entries.txt > $locationWorkingfiles/ipv4list.txt
+# Test whether IPv4 redirect addresses are needed based on whether the
+# $ipv4addr variable is null.
+if [ "$ipv4addr" ]
+then
+    sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > $locationWorkingfiles/sorted_entries4.txt
+    echo "Adding ipv4:$ipv4addr address prefix..."
+    # Add address defined in $ipv4addr before each host entry in
+    # sorted_entries4.txt. Double-quotes mean the variable's value is used.
+    sed "s/^/$ipv4addr /" $locationWorkingfiles/sorted_entries4.txt > $locationWorkingfiles/ipv4list.txt
+    echo "...done"
+else
+    echo "ipv4addr was not specified (null) so the adblock list will not"
+    echo "have an IP4 redirect."
+    # create a zero length file for debugging and to avoid the error message
+    # (which can be safely disregarded anyways) in the concatenation process.
+    touch ipv4list.txt
+fi
 
-echo "Adding ipv6:$ipv6addr address prefix..."
-# Add address defined in $ipv6addr before each host entry in sorted_entries6.txt
-# double-quotes used to the variable's value is expanded
-sed "s/^/$ipv6addr /" $locationWorkingfiles/sorted_entries6.txt > $locationWorkingfiles/ipv6list.txt
+# Test whether IPv6 redirect addresses are needed based on whether the
+# $ipv6addr variable is null.
+if [ "$ipv6addr" ]
+then
+    sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > $locationWorkingfiles/sorted_entries6.txt
+    echo "Adding ipv6:$ipv6addr address prefix..."
+    # Add address defined in $ipv6addr before each host entry in
+    # sorted_entries6.txt. Double-quotes mean the variable's value is used.
+    sed "s/^/$ipv6addr /" $locationWorkingfiles/sorted_entries6.txt > $locationWorkingfiles/ipv6list.txt
+    echo "...done"
+else
+    echo "ipv6addr was not specified (null) so the adblock list will not"
+    echo "have an IP6 redirect."
+    # create a zero length file for debugging and to avoid the error message
+    # (which can be safely disregarded anyways) in the concatenation process.
+    touch ipv6list.txt
+fi
 
+# The previous step created zero-length files if $ipv4addr or $ipv6addr was
+# null. This avoids cat throwing an error here.  However, even if the error was
+# thrown, the concatenation process still works anyways, so the zero-length
+# files are only useful when debugging (or playing with) this script just to
+# have a record that one of the variables was indeed null.
 echo "Concatenating ipv4 and ipv6 lists and sorting for readability..."
 cat $locationWorkingfiles/ipv4list.txt $locationWorkingfiles/ipv6list.txt | sort -t $' ' -k 2,2 > $listpath/adblock.dnsmasq
 
