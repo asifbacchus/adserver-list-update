@@ -107,9 +107,9 @@ echo "Removing duplicates, blank lines and sorting for readability..."
 #      consecutively, -u option removes duplicates
 # 3: remove any blank lines
 # 4: save output file
-sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > locationWorkingfiles/sorted_entries.txt
+sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > $locationWorkingfiles/sorted_entries.txt
 # copy file to there's one copy for ipv4 and one for ipv6
-cp $locationWorkingfiles/sorted_entries.txt locationWorkingfiles/sorted_entries6.txt
+cp $locationWorkingfiles/sorted_entries.txt $locationWorkingfiles/sorted_entries6.txt
 
 echo "Adding ipv4:$ipv4addr address prefix..."
 # Add address as defined in $ipv4addr before each host entry in sorted_entries.txt
