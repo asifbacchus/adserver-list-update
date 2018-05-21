@@ -126,7 +126,7 @@ else
     echo "have an IP4 redirect."
     # create a zero length file for debugging and to avoid the error message
     # (which can be safely disregarded anyways) in the concatenation process.
-    touch ipv4list.txt
+    touch $locationWorkingfiles/ipv4list.txt
 fi
 
 # Test whether IPv6 redirect addresses are needed based on whether the
@@ -144,7 +144,7 @@ else
     echo "have an IP6 redirect."
     # create a zero length file for debugging and to avoid the error message
     # (which can be safely disregarded anyways) in the concatenation process.
-    touch ipv6list.txt
+    touch $locationWorkingfiles/ipv6list.txt
 fi
 
 # The previous step created zero-length files if $ipv4addr or $ipv6addr was
