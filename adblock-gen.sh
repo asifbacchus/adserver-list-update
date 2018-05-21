@@ -21,7 +21,7 @@ locationWorkingfiles="$dir/working"
 # Edit this path to suit your installation.  This can be any directory that
 # makes sense for your setup.  On many systems, "/etc/dnsmasq.d" makes sense.
 # Use a full path here to avoid problems running this script as a cron job.
-listpath="/etc/dnsmasq.d/lists"
+listpath="$dir/lists"
 
 
 ## Create directories needed for this script
