@@ -134,6 +134,13 @@ echo "...cleaning up"
 rm -rf $locationSourcefiles
 rm -rf $locationWorkingfiles
 
+
+## Restart DNSmasq service so it reads the new/updated adblock.dnsmasq file
+echo "Restarting DNSMASQ"
+systemctl restart dnsmasq.service
+echo "...done.  Please consult logs for any errors."
+
+
 ## Exit script gracefully
 echo "...done"
 exit
