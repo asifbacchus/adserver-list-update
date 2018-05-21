@@ -1,13 +1,27 @@
 #!/bin/bash
 
-### Script to download addresses from ad-server lists and modify them for use in
-### a DNSMASQ host file which will redirect those addresses to 0.0.0.0
+### Script to download addresses from ad-server lists and modify them for use
+### in a DNSMASQ host file which will redirect those addresses to an IP4 & IP6
+### address as specified in $ip4addr and $ip6addr.
 
 ## Variables used in this script
-dummyaddr="0.0.0.0"   # suggest using a non-routable address here to avoid waiting on localhost timouts
-locationSourcefiles="sources"
-locationWorkingfiles="working"
-listpath="lists"
+# ip4addr and ip6addr: suggest using the unspecified (ipv4="0.0.0.0", ipv6="::")
+# address for just a 'blackhole'. If you want to forward to a specific server
+# (such as your webserver, etc.) then use that address in these variables.
+# If either ipv4addr or ipv6addr is blank, they will NOT be included in the
+# final address list.
+ip4addr="10.0.0.1"
+ip6addr="fd9e:a15:c7a9:f233::1"
+# get directory in which this script this is located and use that as the base
+# directory for 'sources' and 'working' sub-directories.  This way, path
+# problems are avoided when running as a cron job.
+dir=$(pwd -P)
+locationSourcefiles="$dir/sources"
+locationWorkingfiles="$dir/working"
+# Edit this path to suit your installation.  This can be any directory that
+# makes sense for your setup.  On many systems, "/etc/dnsmasq.d" makes sense.
+# Use a full path here to avoid problems running this script as a cron job.
+listpath="/etc/dnsmasq.d/lists"
 
 
 ## Create directories needed for this script
