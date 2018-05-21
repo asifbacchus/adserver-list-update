@@ -1,17 +1,17 @@
 #!/bin/bash
 
 ### Script to download addresses from ad-server lists and modify them for use
-### in a DNSMASQ host file which will redirect those addresses to an IP4 & IP6
-### address as specified in $ip4addr and $ip6addr.
+### in a DNSMASQ host file which will redirect those addresses to an IPv4 & IPv6
+### address as specified in $ipv4addr and $ipv6addr.
 
 ## Variables used in this script
-# ip4addr and ip6addr: suggest using the unspecified (ipv4="0.0.0.0", ipv6="::")
-# address for just a 'blackhole'. If you want to forward to a specific server
-# (such as your webserver, etc.) then use that address in these variables.
-# If either ipv4addr or ipv6addr is blank, they will NOT be included in the
-# final address list.
-ip4addr="10.0.0.1"
-ip6addr="fd9e:a15:c7a9:f233::1"
+# ipv4addr and ipv6addr: suggest using the unspecified (ipv4addr="0.0.0.0",
+# ipv6addr="::") address for just a 'blackhole'. If you want to forward to a
+# specific server (such as your webserver, etc.) then use that address in these
+# variables. If either ipv4addr or ipv6addr is blank, they will NOT be included
+# in the final address list.
+ipv4addr="10.0.0.1"
+ipv6addr="fd9e:a15:c7a9:f233::1"
 # get directory in which this script this is located and use that as the base
 # directory for 'sources' and 'working' sub-directories.  This way, path
 # problems are avoided when running as a cron job.
@@ -102,16 +102,27 @@ echo "Combining files..."
 cat $locationWorkingfiles/* > $locationWorkingfiles/combined_entries.txt
 
 echo "Removing duplicates, blank lines and sorting for readability..."
-# 1: sort file in ascending order (default) so duplicates are listed consecutively
-# 2: remove adjacent duplicate entries (that's why we sorted in 1 above)
+# 1: normalize end-of-line markers so duplicates are flagged properly
+# 2: sort file in ascending order (default) so duplicates are listed
+#      consecutively, -u option removes duplicates
 # 3: remove any blank lines
 # 4: save output file
-sort $locationWorkingfiles/combined_entries.txt | uniq | sed '/^$/d' > $locationWorkingfiles/sorted_entries.txt
+sed 's/\r//' $locationWorkingfiles/combined_entries.txt | sort -u | sed '/^$/d' > locationWorkingfiles/sorted_entries.txt
+# copy file to there's one copy for ipv4 and one for ipv6
+cp $locationWorkingfiles/sorted_entries.txt locationWorkingfiles/sorted_entries6.txt
 
-echo "Adding proper address prefix..."
-# Add address as defined in $dummyaddr before each host entry
-# double-quotes used so the variable's value is expanded into the statement
-sed "s/^/$dummyaddr /" $locationWorkingfiles/sorted_entries.txt > $listpath/adblock.dnsmasq
+echo "Adding ipv4:$ipv4addr address prefix..."
+# Add address as defined in $ipv4addr before each host entry in sorted_entries.txt
+# double-quotes used so the variable's value is expanded
+sed "s/^/$ipv4addr /" $locationWorkingfiles/sorted_entries.txt > $locationWorkingfiles/ipv4list.txt
+
+echo "Adding ipv6:$ipv6addr address prefix..."
+# Add address as defined in $ipv6addr before each host entry in sorted_entries6.txt
+# double-quotes used to the variable's value is expanded
+sed "s/^/$ipv6addr /" $locationWorkingfiles/sorted_entries6.txt > $locationWorkingfiles/ipv6list.txt
+
+echo "Concatenating ipv4 and ipv6 lists and sorting for readability..."
+cat $locationWorkingfiles/ipv4list.txt $locationWorkingfiles/ipv6list.txt | sort -t $' ' -k 2,2 > $listpath/adblock.dnsmasq
 
 echo
 echo "...adblock list updated..."
